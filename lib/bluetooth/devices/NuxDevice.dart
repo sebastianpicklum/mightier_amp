@@ -293,7 +293,11 @@ abstract class NuxDevice extends ChangeNotifier {
   }
 
   void resetNuxPresets() {
+    _nuxPresetsReceived = false;
     deviceControl.resetNuxPresets();
+
+    //show loading popup
+    connectStatus.add(DeviceConnectionState.connectedStart);
   }
 
   presetFromJson(dynamic _preset) {
@@ -324,10 +328,7 @@ abstract class NuxDevice extends ChangeNotifier {
       p.setSlotEnabled(i, enabled, false);
 
       Processor fx;
-      if (i != 3)
-        fx = p.getEffectsForSlot(i)[p.getSelectedEffectForSlot(i)];
-      else
-        fx = p.getEffectsForSlot(i)[0];
+      fx = p.getEffectsForSlot(i)[p.getSelectedEffectForSlot(i)];
 
       for (int f = 0; f < fx.parameters.length; f++)
         fx.parameters[f].value = _effect[fx.parameters[f].handle];
